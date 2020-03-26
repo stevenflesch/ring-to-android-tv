@@ -2,6 +2,8 @@
 
 A `nodejs` application that acts as a bridge between `ring-client-api` and the [PiPup Android application](https://github.com/rogro82/pipup) in order to view Ring Doorbell camera events on Android TVs like the Nvidia SHIELD.
 
+![](https://raw.githubusercontent.com/stevenflesch/ring-to-android-tv/master/extras/sample-tv-shot.jpg)
+
 ## Requirements
 
 - Android TV
