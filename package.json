@@ -1,0 +1,10 @@
+{
+    "name": "ring-to-android-tv",
+    "version": "1.0.0",
+    "description": "Node application to send Ring API events/pictures to Android TV via PiPup",
+    "license": "MIT",
+    "dependencies": {
+        "ring-client-api": "^7.2.1",
+        "request": "^2.88.2"
+    }
+}
