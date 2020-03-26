@@ -9,11 +9,12 @@ const Ring = require('ring-client-api')
 const fs = require('fs')
 const request = require('request')
 
+// API Token
+const apiToken = fs.readFileSync('token.txt').toString().trim()     // Grab plain-text token from token.txt
+
 // Configuration
-const apiToken = fs.readFileSync('token.txt').toString()    // Grab plain-text token from token.txt
-const tvIpAddress = '192.168.1.11'                          // IP address of the Android TV you are running PiPup on
-const displayTime = 10                                      // Display time for notifications, in seconds
-const opacity = 75                                          // Opacity of notification background, in percentage
+const tvIpAddress = '192.168.1.11'                                  // IP address of the Android TV you are running PiPup on
+const displayTime = 10                                              // Display time for notifications, in seconds
 
 // Set up Ring API object
 ringApi = new Ring.RingApi({
