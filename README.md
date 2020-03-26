@@ -18,6 +18,8 @@ A `nodejs` application that acts as a bridge between `ring-client-api` and the [
 	> `git clone https://github.com/stevenflesch/ring-to-android-tv.git`
 5. Run `npm install` in the `ring-to-android-tv` folder.
 	> `cd ring-to-android-tv`
+
+	> `npm install`
 6. Generate an API token and save it to `token.txt`.  Copy the key value only, no quotes.  *Note: keep this secret, as it allows complete access to your Ring account.*
 	> `npx -p ring-client-api ring-auth-cli`
 7. Test the script using snapshot.js
