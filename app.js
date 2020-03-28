@@ -1,7 +1,10 @@
-/**
- * ring-to-android-tv
+/*
+ * app.js
+ * 
  * This node application acts as a bridge between the ring-client-api and the PiPup Android
- * application.
+ * application to show Ring camera snapshots as an overlay/popup on Android TV devices.
+ * 
+ * Remember to change the tvIpAddress variable and save your API token to token.txt.
  */
 
 // Dependencies
@@ -9,21 +12,29 @@ const Ring = require('ring-client-api')
 const fs = require('fs')
 const request = require('request')
 
-// API Token
-const apiToken = fs.readFileSync('token.txt').toString().trim()     // Grab plain-text token from token.txt
-
 // Configuration
 const tvIpAddress = '192.168.1.11'                                  // IP address of the Android TV you are running PiPup on
-const displayTime = 10                                              // Display time for notifications, in seconds
+const displayTime = 12                                              // Display time for notifications, in seconds
 
-// Set up Ring API object
-ringApi = new Ring.RingApi({
-    refreshToken: apiToken,
-    cameraDingsPollingSeconds: 2
-})
+/**
+ * Returns the API token from `token.txt` or gracefully exits the script with error.
+ */
+function getApiToken() {
+    try {
+        return(fs.readFileSync('token.txt').toString().trim())     // Grab plain-text token from token.txt
+    } catch(err) {
+        console.log('Unable to read API token from token.txt - ensure you have an API token before running the script.')
+        process.exit(-1)
+    }
+}
 
-// Send notification to PiPup
-async function sendNotification(title, message, imageFile) {
+/**
+ * Sends a notification to PiPup app on Android TV.
+ * @param {*} title Title of notification message.
+ * @param {*} message Text of notification message.
+ * @param {*} imageFile Path to image file, can be blank string to display no image.
+ */
+async function sendNotification(title, message, imageFile) {    
     const options = {
         method: "POST",
         url: "http://" + tvIpAddress + ":7979/notify",
@@ -31,7 +42,7 @@ async function sendNotification(title, message, imageFile) {
         headers: {
             "Content-Type": "multipart/form-data"
         },
-        formData : {
+        formData: {
             "duration": displayTime,
             "position": 0,
             "title": title,
@@ -41,7 +52,7 @@ async function sendNotification(title, message, imageFile) {
             "messageColor": "#000000",
             "messageSize": 14,
             "backgroundColor": "#ffffff",
-            "image" : fs.createReadStream(imageFile),
+            "image" : (imageFile == '') ? "" : fs.createReadStream(imageFile),
             "imageWidth": 640
         }
     }
@@ -49,6 +60,7 @@ async function sendNotification(title, message, imageFile) {
     // Fire off POST message to PiPup with 'request'
     request(options, function (err, res, body) {
         if(err) {
+            console.log('Error sending notification.')
             console.log(err)
         } else {
             console.log('Sent notification successfully.')
@@ -56,30 +68,16 @@ async function sendNotification(title, message, imageFile) {
     })
 }
 
-async function startCameraPolling() {
+/**
+ * Starts polling a Ring camera for events and grabs snapshots on motion/dings.
+ * @param {*} notifyOnStart Whether to send a notification when beginning camera polling.
+ */
+async function startCameraPolling(notifyOnStart) {
     const locations = await ringApi.getLocations()
     const location = locations[0]
     const camera = location.cameras[0]
 
-    /*
-    try {
-        const snapshotBuffer = await camera.getSnapshot()
-        console.log(snapshotBuffer)
-
-        fs.writeFile('snapshot.png', snapshotBuffer, (err) => {
-            // throws an error, you could also catch it here
-            if (err) throw err;
-        
-            // success case, the file was saved
-            console.log('Snapshot saved!')
-            sendNotification('test', 'test', 'snapshot.png')
-        })
-    } catch (e) {
-        // failed to get a snapshot.  handle the error however you please
-        console.log('Unable to get snapshot...')
-        sendNotification('test-error', 'error occured!', 'error.png')
-    }
-    */
+    if(notifyOnStart) sendNotification('ring-to-android-tv', 'Ring notifications started!')
 
     // Start the camera subscription to listen for motion/rings/etc...
     camera.onNewDing.subscribe(async ding => {
@@ -99,11 +97,11 @@ async function startCameraPolling() {
         // Build notification
         switch(ding.kind) {
             case 'motion':
-                notifyTitle = '🏃‍♂️ Motion Detected 🏃‍♂️'
+                notifyTitle = 'Motion Detected'
                 notifyMessage = 'Motion detected at front door!'
                 break;
             case 'ding':
-                notifyTitle = '🔔 Doorbell Ring 🔔'
+                notifyTitle = 'Doorbell Ring'
                 notifyMessage = 'Doorbell rung at front door!'
                 break;
         }
@@ -118,9 +116,8 @@ async function startCameraPolling() {
             
                 // success case, the file was saved
                 console.log('Snapshot saved!');
+                sendNotification(notifyTitle, notifyMessage, 'snapshot.png')
             })
-
-            sendNotification(notifyTitle, notifyMessage, 'snapshot.png')
         } catch (e) {
             // failed to get a snapshot.  handle the error however you please
             console.log('Unable to get snapshot.')
@@ -136,4 +133,12 @@ async function startCameraPolling() {
       })
 }
 
+// Set up Ring API object
+ringApi = new Ring.RingApi({
+    refreshToken: getApiToken(),
+    controlCenterDisplayName: 'ring-to-android-tv',
+    cameraDingsPollingSeconds: 2
+})
+
+// Begin polling camera for events
 startCameraPolling()
