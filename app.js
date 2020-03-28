@@ -77,7 +77,7 @@ async function startCameraPolling(notifyOnStart) {
     const location = locations[0]
     const camera = location.cameras[0]
 
-    if(notifyOnStart) sendNotification('ring-to-android-tv', 'Ring notifications started!')
+    if(notifyOnStart) sendNotification('ring-to-android-tv', 'Ring notifications started!', '')
 
     // Start the camera subscription to listen for motion/rings/etc...
     camera.onNewDing.subscribe(async ding => {
