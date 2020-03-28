@@ -141,4 +141,4 @@ ringApi = new Ring.RingApi({
 })
 
 // Begin polling camera for events
-startCameraPolling()
+startCameraPolling(true)
