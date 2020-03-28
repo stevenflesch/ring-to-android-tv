@@ -12,7 +12,7 @@ A `nodejs` application that acts as a bridge between `ring-client-api` and the [
 
 ## Setup
 
-1. Install PiPup on your Android TV.  Follow instructions on the PiPup page to gain access to the public beta.
+1. Install [PiPup](https://github.com/rogro82/pipup) on your Android TV.  Follow instructions on the PiPup page to gain access to the public beta.
 2. Use ADB Shell to grant overlay permissions - see instructions below in *ADB Shell over Network* section.
 	>`adb shell appops set nl.rogro82.pipup SYSTEM_ALERT_WINDOW allow`
 3. Install `node` and `git` on your server, if not already.
