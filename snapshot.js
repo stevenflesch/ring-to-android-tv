@@ -14,7 +14,6 @@ const request = require('request')
 // Configuration
 const tvIpAddress = '192.168.1.11'                                  // IP address of the Android TV you are running PiPup on
 const displayTime = 20                                              // Display time for notifications, in seconds
-const opacity = 100                                                 // Opacity of notification background, in percentage
 
 /**
  * Returns the API token from `token.txt` or gracefully exits the script with error.
