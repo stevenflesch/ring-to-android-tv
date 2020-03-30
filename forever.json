@@ -1,0 +1,13 @@
+{
+    "uid": "ring-to-android-tv",
+    "append": true,
+    "watch": true,
+    "watchIgnore": [
+        "forever-out.log",
+        "forever-error.log"
+    ],
+    "script": "app.js",
+    "logFile": "forever.log",
+    "outFile": "forever-out.log",
+    "errFile": "forever-error.log"
+}
