@@ -48,6 +48,24 @@ If you'd like to execute the adb shell command with your Android phone, you can 
 8. Execute the following command: **`appops set nl.rogro82.pipup SYSTEM_ALERT_WINDOW allow`**
 9. You can now disable **Network debugging** if you desire, for security purposes.
 
+## Run as a Service
+
+In order to run `ring-to-android-tv` as a service, you'll need to install the `forever` npm package and edit your crontab to run the script at startup.  Follow the directions below.
+
+1. Install [forever.js](https://github.com/foreversd/forever).  In this example, we are installing it globally, which requires root priviledges.
+	> `sudo npm install forever -g`
+2. Navigate to script directory.
+	> `cd ring-to-android-tv/`
+3. Run forever with provided JSON configuration.
+	> `forever start forever.json`
+4. *Note: you can stop the script with the friendly UID: `forever stop ring-to-android-tv`
+5. Open your crontab to add an entry to start script on reboot.
+	> `crontab -e`
+6. Paste the following line at the end of your crontab:
+	> `@reboot forever start ~/ring-to-android-tv/forever.json`
+
+	> *Press CTRL-X and Y to save and exit.*
+
 ## Configuration
 
 | Option  | Explanation  |
