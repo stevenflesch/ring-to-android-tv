@@ -57,14 +57,14 @@ In order to run `ring-to-android-tv` as a service, you'll need to install the `f
 2. Navigate to script directory.
 	> `cd ring-to-android-tv/`
 3. Run forever with provided JSON configuration.
-	> `forever start forever.json`
-4. *Note: you can stop the script with the friendly UID: `forever stop ring-to-android-tv`
+	> `forever start -a app.js`
+4. *Note: you can check that the script is running by entering: `forever list`
 5. Open your crontab to add an entry to start script on reboot.
 	> `crontab -e`
-6. Paste the following line at the end of your crontab:
-	> `@reboot forever start ~/ring-to-android-tv/forever.json`
+6. Paste the following line at the end of your crontab: *(assuming you installed the app in your home directory)*
+	> `@reboot forever start -a ~/ring-to-android-tv/app.js`
 
-	> *Press CTRL-X and Y to save and exit.*
+	> *Press **CTRL-X**, then **Y**, then **ENTER**, to save and exit.*
 
 ## Configuration
 
