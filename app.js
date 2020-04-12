@@ -21,7 +21,7 @@ const displayTime = 12                                              // Display t
  */
 function getApiToken() {
     try {
-        return(fs.readFileSync('token.txt').toString().trim())     // Grab plain-text token from token.txt
+        return(fs.readFileSync(__dirname + '/token.txt').toString().trim())     // Grab plain-text token from token.txt
     } catch(err) {
         console.log('Unable to read API token from token.txt - ensure you have an API token before running the script.')
         process.exit(-1)
@@ -52,7 +52,7 @@ async function sendNotification(title, message, imageFile) {
             "messageColor": "#000000",
             "messageSize": 14,
             "backgroundColor": "#ffffff",
-            "image" : (imageFile == '') ? "" : fs.createReadStream(imageFile),
+            "image" : (imageFile == '') ? "" : fs.createReadStream(__dirname + '/' + imageFile),
             "imageWidth": 640
         }
     }
@@ -110,7 +110,7 @@ async function startCameraPolling(notifyOnStart) {
         try {
             const snapshotBuffer = await camera.getSnapshot()
     
-            fs.writeFile('snapshot.png', snapshotBuffer, (err) => {
+            fs.writeFile(dirname + '/snapshot.png', snapshotBuffer, (err) => {
                 // throws an error, you could also catch it here
                 if (err) throw err;
             

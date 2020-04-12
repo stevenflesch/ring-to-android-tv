@@ -1,6 +1,0 @@
-{
-    "uid": "ring-to-android-tv",
-    "append": true,
-    "watch": false,
-    "script": "app.js"
-}
