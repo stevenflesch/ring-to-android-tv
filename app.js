@@ -88,11 +88,7 @@ async function startCameraPolling(notifyOnStart) {
             ? 'Doorbell pressed'
             : `Video started (${ding.kind})`
 
-        console.log(
-          `${event} on ${camera.name} camera. Ding id ${
-            ding.id_str
-          }.  Received at ${new Date()}`
-        )
+        console.log(`[${new Date()}] [ding id: ${ding.id_str}] ${event} on ${camera.name} camera.`)
 
         // Build notification
         switch(ding.kind) {
