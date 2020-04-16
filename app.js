@@ -110,7 +110,7 @@ async function startCameraPolling(notifyOnStart) {
         try {
             const snapshotBuffer = await camera.getSnapshot()
     
-            fs.writeFile(dirname + '/snapshot.png', snapshotBuffer, (err) => {
+            fs.writeFile(__dirname + '/snapshot.png', snapshotBuffer, (err) => {
                 // throws an error, you could also catch it here
                 if (err) throw err;
             
