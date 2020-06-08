@@ -26,8 +26,10 @@ A `nodejs` application that acts as a bridge between `ring-client-api` and the [
 	> `npm install`
 6. Generate an API token and save it to `token.txt`.  Copy the key value only, no quotes.  *Note: keep this secret, as it allows complete access to your Ring account.*
 	> `npx -p ring-client-api ring-auth-cli`
-7. Test the script using snapshot.js
-	> `node snapshot.js`
+7. Test the script using `--test` flag.
+	> `node app.js --test`
+	
+	>*Note: If you want to test a different camera, you can use a different camera by specifying a location,camera like `--test 0,0`.  List your locations by typing `node app.js --list`.*
 8. Configure `app.js` with your Android TV's IP address and change other options, if desired.  *See configuration below.*
 8. Run the application!
 	> `node app.js`
@@ -50,21 +52,20 @@ If you'd like to execute the adb shell command with your Android phone, you can 
 
 ## Run as a Service
 
-In order to run `ring-to-android-tv` as a service, you'll need to install the `forever` npm package and edit your crontab to run the script at startup.  Follow the directions below.
+In order to run `ring-to-android-tv` as a service, you'll need to install the `forever` and `forever-service` npm packages and edit your crontab to run the script at startup.  Follow the directions below.
 
-1. Install [forever.js](https://github.com/foreversd/forever).  In this example, we are installing it globally, which requires root priviledges.
-	> `sudo npm install forever -g`
+1. Install [forever.js](https://github.com/foreversd/forever) and [forever-service.js](https://github.com/zapty/forever-service).  In this example, we are installing it globally, which requires root priviledges.
+	> `sudo npm install forever forever-service -g`
 2. Navigate to script directory.
 	> `cd ring-to-android-tv/`
-3. Run forever with provided JSON configuration.
-	> `forever start -a app.js`
-4. *Note: you can check that the script is running by entering: `forever list`
-5. Open your crontab to add an entry to start script on reboot.
-	> `crontab -e`
-6. Paste the following line at the end of your crontab: *(assuming you installed the app in your home directory)*
-	> `@reboot forever start -a ~/ring-to-android-tv/app.js`
+3. Install service with provided JSON configuration.
+	> `sudo forever-service install ring-to-android-tv`
+4. *Note: you can check that the script is running by entering: `sudo service ring-to-android-tv status`
 
-	> *Press **CTRL-X**, then **Y**, then **ENTER**, to save and exit.*
+## Updating the Script
+
+To update the script, simply `cd` to the app directory and run `git pull`.
+> `cd ring-to-android-tv/ && git pull`
 
 ## Configuration
 
@@ -82,7 +83,7 @@ This application is released under an MIT license.
 ### Contributions
 
 Please submit contributions with a pull request, they are very welcome!  A short list of needed enhancements are below:
-- Ability to show notifications from multiple cameras and locations
+- [x] ~~Ability to show notifications from multiple cameras and locations~~
 
 ## Acknowledgements
 
