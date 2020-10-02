@@ -11,6 +11,7 @@
 const Ring = require('ring-client-api')
 const fs = require('fs')
 const request = require('request')
+const { exit } = require('process')
 
 // Configuration
 const tvIpAddress = '192.168.1.11'                                  // IP address of the Android TV you are running PiPup on
@@ -61,7 +62,7 @@ async function sendNotification(title, message, imageFile, exitAfter = false) {
     // Fire off POST message to PiPup with 'request'
     request(options, function (err, res, body) {
         if(err) {
-            console.log(`Error sending notification: ${title} - ${message}`)
+            console.log(`[ERROR] Error sending notification: ${title} - ${message}`)
             console.log(err)
             process.exitCode = 1
         } else {
@@ -72,7 +73,10 @@ async function sendNotification(title, message, imageFile, exitAfter = false) {
 }
 
 async function listLocationsAndCameras() {
-    locations = await ringApi.getLocations()
+    locations = await ringApi.getLocations().catch(error => {
+        console.log('[ERROR] Unable to retrieve camera locations because: ' + error.message)
+        process.exit(1) // exit with error code
+    })
     intLocation = 0
     intCamera = 0
 
@@ -97,9 +101,13 @@ async function listLocationsAndCameras() {
  * @param {*} intCamera Number of camera to use in Location->Camera array.
  */
 async function getTestSnapshot(intLocation = 0, intCamera = 0) {
-    const locations = await ringApi.getLocations()
-    const location = locations[intLocation]
-    const camera = location.cameras[intCamera]
+    const locations = await ringApi.getLocations().then(locations => {
+        const location = locations[intLocation]
+        const camera = location.cameras[intCamera]
+    }).catch(error => {
+        console.log('[ERROR] Unable to retrieve camera locations because: ' + error.message)
+        process.exit(1) // exit with error code
+    })
 
     console.log(`Attempting to get snapshot for location #${intLocation}, camera #${intCamera}`)
     
@@ -128,7 +136,10 @@ async function getTestSnapshot(intLocation = 0, intCamera = 0) {
  * @param {*} notifyOnStart Whether to send a notification when beginning camera polling.
  */
 async function startCameraPolling(notifyOnStart) {
-    const locations = await ringApi.getLocations()
+    const locations = await ringApi.getLocations().catch(error => {
+        console.log('Unable to retrieve camera locations because: ' + error.message)
+        process.exit(1) // exit with error code
+    })
     
     locations.forEach(function(location) {
         console.log(`Found location: ${location.name}`)
@@ -166,7 +177,9 @@ async function startCameraPolling(notifyOnStart) {
 
                 // Grab new snapshot
                 try {
-                    const snapshotBuffer = await camera.getSnapshot()
+                    const snapshotBuffer = await camera.getSnapshot().catch(error => {
+                        console.log('[ERROR] Unable to retrieve snapshot because:' + error.message)
+                    })
             
                     fs.writeFile(__dirname + '/snapshot.png', snapshotBuffer, (err) => {
                         // throws an error, you could also catch it here
