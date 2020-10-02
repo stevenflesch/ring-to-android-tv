@@ -4,6 +4,12 @@ A `nodejs` application that acts as a bridge between `ring-client-api` and the [
 
 ![](https://raw.githubusercontent.com/stevenflesch/ring-to-android-tv/master/extras/sample-tv-shot.jpg)
 
+## Updates
+
+ ### v2.0.0 - Oct 01, 2020
+
+ - **BREAKING CHANGES**: Use of `token.txt` and script variables are deprecated.  These values are now stored in a .env file.  See `.env.example` for an example.
+
 ## Requirements
 
 - Android TV
@@ -24,17 +30,22 @@ A `nodejs` application that acts as a bridge between `ring-client-api` and the [
 	> `cd ring-to-android-tv`
 
 	> `npm install`
-6. Generate an API token and save it to `token.txt`.  Copy the key value only, no quotes.  *Note: keep this secret, as it allows complete access to your Ring account.*
+6. Copy the .env.example file to .env to configure your installation.
+	> `cp .env.example .env`
+7. Open `.env` in your editor and replace the `R2ATV_IP_ADDRESS` variable with the IP of your AndroidTV.
+8. Generate an API token and save it to `.env`.  Copy the key value only, no quotes.  *Note: keep this secret, as it allows complete access to your Ring account.*
 	> `npx -p ring-client-api ring-auth-cli`
-7. Test the script using `--test` flag.
+
+	> *Save token to `.env` line like so:*
+
+	> `R2ATV_API_TOKEN=`**MYAPITOKEN**
+9. Test the script using `--test` flag.
 	> `node app.js --test`
 	
 	>*Note: If you want to test a different camera, you can use a different camera by specifying a location,camera like `--test 0,0`.  List your locations by typing `node app.js --list`.*
-8. Configure `app.js` with your Android TV's IP address and change other options, if desired.  *See configuration below.*
-8. Run the application!
+10. Run the application!
 	> `node app.js`
-9. *TODO: persist app after server restarts with forever.js and crontab*
-10. *TODO: Automatic updates with crontab and `git pull`*
+11. *Optional:* Install the app as a service with instructions below.
 
 #### ADB Shell over Network
 
@@ -71,8 +82,9 @@ To update the script, simply `cd` to the app directory and run `git pull`.
 
 | Option  | Explanation  |
 |:----------|:----------|
-| `tvIpAddress`    | *Address of the IP address of the Android TV running PiPup.  Required.*    |
-| `displayTime`    | *Time, in seconds, to display popup notifications.*    |
+| `R2ATV_IP_ADDRESS`    | *Address of the IP address of the Android TV running PiPup.  Required.*    |
+| `R2ATV_DISPLAY_TIME`    | *Time, in seconds, to display popup notifications.*    |
+| `R2ATV_API_TOKEN` | *API Token used from Ring* |
 
 ## License & Contributions
 
@@ -82,8 +94,7 @@ This application is released under an MIT license.
 
 ### Contributions
 
-Please submit contributions with a pull request, they are very welcome!  A short list of needed enhancements are below:
-- [x] ~~Ability to show notifications from multiple cameras and locations~~
+Please submit contributions with a pull request, they are very welcome!
 
 ## Acknowledgements
 

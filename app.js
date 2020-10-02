@@ -12,20 +12,21 @@ const Ring = require('ring-client-api')
 const fs = require('fs')
 const request = require('request')
 const { exit } = require('process')
+require('dotenv').config()
 
 // Configuration
-const tvIpAddress = '192.168.1.11'                                  // IP address of the Android TV you are running PiPup on
-const displayTime = 12                                              // Display time for notifications, in seconds
+const tvIpAddress = process.env.R2ATV_IP_ADDRESS            // IP address of the Android TV you are running PiPup on
+const displayTime = process.env.R2ATV_DISPLAY_TIME || 12    // Display time for notifications, in seconds
 
 /**
  * Returns the API token from `token.txt` or gracefully exits the script with error.
  */
 function getApiToken() {
     try {
-        return(fs.readFileSync(__dirname + '/token.txt').toString().trim())     // Grab plain-text token from token.txt
+        return(process.env.R2ATV_API_TOKEN.toString().trim())     // Grab plain-text token from .env file.
     } catch(err) {
-        console.log('Unable to read API token from token.txt - ensure you have an API token before running the script.')
-        process.exit(-1)
+        console.log('Unable to read API token from .env file - ensure you have an API token before running the script.')
+        process.exit(1)
     }
 }
 
