@@ -19,18 +19,6 @@ const tvIpAddress = process.env.R2ATV_IP_ADDRESS            // IP address of the
 const displayTime = process.env.R2ATV_DISPLAY_TIME || 12    // Display time for notifications, in seconds
 
 /**
- * Returns the API token from `token.txt` or gracefully exits the script with error.
- */
-function getApiToken() {
-    try {
-        return(process.env.R2ATV_API_TOKEN.toString().trim())     // Grab plain-text token from .env file.
-    } catch(err) {
-        console.log('Unable to read API token from .env file - ensure you have an API token before running the script.')
-        process.exit(1)
-    }
-}
-
-/**
  * Sends a notification to PiPup app on Android TV.
  * @param {*} title Title of notification message.
  * @param {*} message Text of notification message.
@@ -215,7 +203,7 @@ async function startCameraPolling(notifyOnStart) {
 
 // Set up Ring API object
 ringApi = new Ring.RingApi({
-    refreshToken: getApiToken(),
+    refreshToken: process.env.R2ATV_API_TOKEN,
     controlCenterDisplayName: 'ring-to-android-tv',
     cameraDingsPollingSeconds: 5    // Default is 5, less seems to cause API token to expire.
 })
