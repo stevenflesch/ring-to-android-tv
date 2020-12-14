@@ -11,6 +11,7 @@
 const Ring = require('ring-client-api')
 const fs = require('fs')
 const request = require('request')
+const { promisify } = require('util')
 const { exit } = require('process')
 require('dotenv').config()
 
@@ -207,6 +208,25 @@ ringApi = new Ring.RingApi({
     controlCenterDisplayName: 'ring-to-android-tv',
     cameraDingsPollingSeconds: 5    // Default is 5, less seems to cause API token to expire.
 })
+
+// Automatically replace refresh tokens, as they now expire after each use.
+// See: https://github.com/dgreif/ring/wiki/Refresh-Tokens#refresh-token-expiration
+ringApi.onRefreshTokenUpdated.subscribe(
+    async ({ newRefreshToken, oldRefreshToken }) => {
+        console.log('Refresh Token Updated') // Changed from example, don't write new token to log.
+
+        if (!oldRefreshToken) {
+        return
+        }
+
+        const currentConfig = await promisify(fs.readFile)('.env'),
+        updatedConfig = currentConfig
+            .toString()
+            .replace(oldRefreshToken, newRefreshToken)
+
+        await promisify(fs.writeFile)('.env', updatedConfig)
+    }
+)
 
 if(process.argv.includes('--test')) {
     // Just grab a snapshot for testing, then exit.
