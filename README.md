@@ -6,6 +6,10 @@ A `nodejs` application that acts as a bridge between `ring-client-api` and the [
 
 ## Updates
 
+ ### Update - July 01, 2021
+ 
+ - I no longer have access to a Ring device, so this project will not receive updates in the future.  If you wish to maintain this project, please open an issue.  Thank you!
+
  ### v2.0.0 - Oct 01, 2020
 
  - **BREAKING CHANGES**: Use of `token.txt` and script variables are deprecated.  These values are now stored in a .env file.  See `.env.example` for an example.
