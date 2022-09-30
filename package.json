@@ -6,7 +6,7 @@
     "dependencies": {
         "dotenv": "^8.2.0",
         "request": "^2.88.2",
-        "ring-client-api": "^9.23.0",
+        "ring-client-api": "^11.2.1",
         "util": "^0.12.3"
     }
 }
